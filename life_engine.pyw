@@ -151,6 +151,6 @@ if __name__ == '__main__':
     elif len(sys.argv) == 5:
         engine(int(sys.argv[1]), int(sys.argv[2]), int(sys.argv[3]), int(sys.argv[4]))
     else:
-        print("Didn't understand command line arguments. Starting with the following options:")
+        print("Starting with default options:")
         print("x = 25\t\ty = 25\nscale = 15\tfps = 15")
         engine(25, 25, 15, 15)

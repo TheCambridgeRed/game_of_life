@@ -48,7 +48,7 @@ class Cell:
             if cells_list[self.x][self.y - 1].state == State.ALIVE:
                 self.live_neighbours+= 1
 
-        elif self.x == max_x - 1and self.y == 0:            # top right corner
+        elif self.x == max_x - 1 and self.y == 0:            # top right corner
             if cells_list[self.x - 1][self.y].state == State.ALIVE:
                 self.live_neighbours+= 1
             if cells_list[self.x - 1][self.y + 1].state == State.ALIVE:

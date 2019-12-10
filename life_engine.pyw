@@ -135,6 +135,7 @@ def engine(x, y, scale, fps):
                     
             update_all(screen, x, y, scale, fps, cell_list,
                        game_state, clock, calc_next)
+            calc_next = False
 
 # global colour names
 live_colour = (241, 222, 8)

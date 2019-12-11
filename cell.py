@@ -156,15 +156,71 @@ class Cell:
         #                     self.live_neighbours+= 1
 
         
-    def am_i_alive(self):
-        if self.state == State.ALIVE:
-            if self.live_neighbours != 2 and self.live_neighbours != 3:
-                self.toggle()
-        elif self.state == State.DEAD:
-            if self.live_neighbours == 3:
-                self.toggle()
-                
-            
+    def am_i_alive(self, rule="life"):
+        if rule == "life":
+            if self.state == State.ALIVE:
+                if self.live_neighbours != 2 and self.live_neighbours != 3:
+                    self.toggle()
+            elif self.state == State.DEAD:
+                if self.live_neighbours == 3:
+                    self.toggle()
+                    
+        elif rule == "highlife":
+            if self.state == State.ALIVE:
+                if self.live_neighbours != 2 and self.live_neighbours != 3:
+                    self.toggle()
+            elif self.state == State.DEAD:
+                if self.live_neighbours == 3 or self.live_neighbours == 6:
+                    self.toggle()
+
+        elif rule == "morley":
+            if self.state == State.ALIVE:
+                if (self.live_neighbours != 2 and self.live_neighbours != 4 and
+                    self.live_neighbours != 5):
+                    self.toggle()
+            elif self.state == State.DEAD:
+                if (self.live_neighbours == 3 or self.live_neighbours == 6 or
+                    self.live_neighbours == 8):
+                    self.toggle()
+
+        elif rule == "2x2":
+            if self.state == State.ALIVE:
+                if (self.live_neighbours != 1 and self.live_neighbours != 2 and
+                    self.live_neighbours != 5):
+                    self.toggle()
+            elif self.state == State.DEAD:
+                if self.live_neighbours == 3 or self.live_neighbours == 6:
+                    self.toggle()
+
+        elif rule == "daynight":
+            if self.state == State.ALIVE:
+                if (self.live_neighbours != 3 and self.live_neighbours != 4 and
+                    self.live_neighbours != 6 and self.live_neighbours != 7 and
+                    self.live_neighbours != 8):
+                    self.toggle()
+            elif self.state == State.DEAD:
+                if (self.live_neighbours == 3 or self.live_neighbours == 6 or
+                    self.live_neighbours == 7 or self.live_neighbours == 8):
+                    self.toggle()
+                    
+        elif rule == "inkspot":
+            if self.state == State.DEAD:
+                if self.live_neighbours == 3:
+                    self.toggle()
+            elif self.state == State.ALIVE:
+                pass
+                    
+        elif rule == "replicator":
+            if self.state == State.ALIVE:
+                if (self.live_neighbours != 1 and self.live_neighbours != 3 and
+                    self.live_neighbours != 5 and self.live_neighbours != 7):
+                    self.toggle()
+            elif self.state == State.DEAD:
+                if (self.live_neighbours == 1 or self.live_neighbours == 3 or
+                    self.live_neighbours == 5 or self.live_neighbours == 7):
+                    self.toggle()
+
+                    
     def toggle(self):
         if self.state == State.ALIVE:
             self.state = State.DEAD

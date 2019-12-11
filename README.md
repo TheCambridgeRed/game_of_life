@@ -5,6 +5,7 @@ Dependencies: pygame
 
 Usage:
 
+* python life_engine.pyw
 * python life_engine.pyw [x] [y]
 * python life_engine.pyw [x] [y] [size of cells]
 * python life_engine.pyw [x] [y] [size of cells] [fps]

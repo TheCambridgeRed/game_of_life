@@ -16,15 +16,15 @@ def update_neighbours(list_of_cells, max_x, max_y):
             cell.count_live_neighbours(list_of_cells, max_x, max_y)
 
             
-def update_living(list_of_cells):
+def update_living(list_of_cells, rule):
     for line in list_of_cells:
         for cell in line:
-            cell.am_i_alive()
+            cell.am_i_alive(rule)
 
             
-def calc_next_round(list_of_cells, max_x, max_y): 
+def calc_next_round(list_of_cells, max_x, max_y, rule): 
     update_neighbours(list_of_cells, max_x, max_y)
-    update_living(list_of_cells)
+    update_living(list_of_cells, rule)
             
 
 def generate_list_of_cells(x, y, scale_factor):
@@ -68,9 +68,9 @@ def clear_board(cell_list):
 
 
 def update_all(screen, x, y, scale, fps, cell_list,
-               game_state, clock, calc_next):
+               game_state, clock, calc_next, rule):
     if calc_next:
-        calc_next_round(cell_list, x, y)
+        calc_next_round(cell_list, x, y, rule)
         
     print_cells(cell_list, screen)
     draw_grid(x, y, scale, screen)
@@ -81,7 +81,9 @@ def update_all(screen, x, y, scale, fps, cell_list,
     pygame.display.update()
 
             
-def engine(x, y, scale, fps):
+def engine(x, y, scale, fps, rule="life"):
+    print(f"x = {x}\ny = {y}\ncell size = {scale}\nfps = {fps}\nrule = {rule}")
+    
     size = width, height = x * scale, y * scale
     screen = pygame.display.set_mode(size)
     pygame.display.set_caption('Game of Life')
@@ -94,7 +96,7 @@ def engine(x, y, scale, fps):
     calc_next = False
 
     update_all(screen, x, y, scale, fps, cell_list,
-               game_state, clock, calc_next)
+               game_state, clock, calc_next, rule)
     
     while True:
         if game_state == GameState.SETUP:
@@ -107,12 +109,12 @@ def engine(x, y, scale, fps):
                     elif event.key == pygame.K_n:
                         calc_next = True
                         update_all(screen, x, y, scale, fps, cell_list,
-                                   game_state, clock, calc_next)
+                                   game_state, clock, calc_next, rule)
                         calc_next = False
                     elif event.key == pygame.K_c:
                         clear_board(cell_list)
                         update_all(screen, x, y, scale, fps, cell_list,
-                                   game_state, clock, calc_next)
+                                   game_state, clock, calc_next, rule)
                     elif event.key == pygame.K_q:
                         sys.exit()
                 elif event.type == pygame.MOUSEBUTTONDOWN:
@@ -122,7 +124,7 @@ def engine(x, y, scale, fps):
                             if cell.rect.collidepoint(mouse_pos):
                                 cell.toggle()
                     update_all(screen, x, y, scale, fps, cell_list,
-                               game_state, clock, calc_next)
+                               game_state, clock, calc_next, rule)
     
         elif game_state == GameState.RUNNING:
             calc_next = True
@@ -134,7 +136,7 @@ def engine(x, y, scale, fps):
                         game_state = GameState.SETUP
                     
             update_all(screen, x, y, scale, fps, cell_list,
-                       game_state, clock, calc_next)
+                       game_state, clock, calc_next, rule)
             calc_next = False
 
 # global colour names
@@ -150,8 +152,11 @@ if __name__ == '__main__':
     elif len(sys.argv) == 4:
         engine(int(sys.argv[1]), int(sys.argv[2]), int(sys.argv[3]), 15)
     elif len(sys.argv) == 5:
-        engine(int(sys.argv[1]), int(sys.argv[2]), int(sys.argv[3]), int(sys.argv[4]))
+        engine(int(sys.argv[1]), int(sys.argv[2]), int(sys.argv[3]),
+               int(sys.argv[4]))
+    elif len(sys.argv) == 6:
+        engine(int(sys.argv[1]), int(sys.argv[2]), int(sys.argv[3]),
+               int(sys.argv[4]), rule=str(sys.argv[5]))
     else:
         print("Starting with default options:")
-        print("x = 25\t\ty = 25\nscale = 15\tfps = 15")
         engine(25, 25, 15, 15)

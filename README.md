@@ -1,19 +1,16 @@
 # game_of_life
-An implementation of Conway's Game of Life in pygame
+An implementation of Conway's Game of Life using pygame
 
-Deps: pygame
+Dependencies: pygame
 
-The program takes command line arguments. Usage:
+Usage:
 
-python life_engine.pyw [x] [y]
+* python life_engine.pyw [x] [y]
+* python life_engine.pyw [x] [y] [size of cells]
+* python life_engine.pyw [x] [y] [size of cells] [fps]
+* python life_engine.pyw [x] [y] [size of cells] [fps] [rule]
 
-python life_engine.pyw [x] [y] [size of cells]
-
-python life_engine.pyw [x] [y] [size of cells] [fps]
-
-python life_engine.pyw [x] [y] [size of cells] [fps] [rule]
-
-Defaults are: 
+Defaults: 
 * x = 25
 * y = 25
 * size of cells = 15

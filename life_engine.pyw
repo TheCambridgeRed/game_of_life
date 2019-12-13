@@ -54,7 +54,7 @@ def generate_cells_list(x, y, scale_factor):
     return main_list
 
 
-def print_cells(cells_list, screen):
+def draw_cells(cells_list, screen):
     for line in cells_list:
         for cell in line:
             if cell.state == State.ALIVE:
@@ -78,11 +78,11 @@ def clear_board(cell_list):
 
 
 def update_all(screen, x, y, scale, fps, cell_list,
-               game_state, clock, calc_next, rule):
+               game_state, clock, rule, calc_next):
     if calc_next:
         calc_next_round(cell_list, x, y, rule)
         
-    print_cells(cell_list, screen)
+    draw_cells(cell_list, screen)
     draw_grid(x, y, scale, screen)
     
     if game_state == GameState.RUNNING:
@@ -94,22 +94,33 @@ def update_all(screen, x, y, scale, fps, cell_list,
 def engine(x, y, scale, fps, rule="life"):
     print(f'x = {x}\ny = {y}\ncell size = {scale}\nfps = {fps}\nrule = {rule}')
 
+    # setup
     pygame.init()
     
     size = width, height = x * scale, y * scale
     screen = pygame.display.set_mode(size)
     pygame.display.set_caption('Game of Life')
+
+    game_icon = pygame.image.load('icon.jpg')
+    pygame.display.set_icon(game_icon)
+
     screen.fill((64, 64, 64))
     clock = pygame.time.Clock()
 
+    key_delay = int(1000/fps)
+    pygame.key.set_repeat(key_delay)
+    
     cell_list = generate_cells_list(x, y, scale)
     
     game_state = GameState.SETUP
     calc_next = False
+    changing = False
+    changing_to = State.ALIVE
 
     update_all(screen, x, y, scale, fps, cell_list,
-               game_state, clock, calc_next, rule)
+               game_state, clock, rule, calc_next)
     
+    # game loop
     while True:
         if game_state == GameState.SETUP:
             for event in pygame.event.get():
@@ -121,23 +132,37 @@ def engine(x, y, scale, fps, rule="life"):
                     elif event.key == pygame.K_SPACE:
                         game_state = GameState.RUNNING
                     elif event.key == pygame.K_n:
-                        calc_next = True
                         update_all(screen, x, y, scale, fps, cell_list,
-                                   game_state, clock, calc_next, rule)
-                        calc_next = False
+                                   game_state, clock, rule, calc_next=True)
                     elif event.key == pygame.K_c:
                         clear_board(cell_list)
                         update_all(screen, x, y, scale, fps, cell_list,
-                                   game_state, clock, calc_next, rule)
-                elif event.type == pygame.MOUSEBUTTONDOWN:
-                    mouse_pos = pygame.mouse.get_pos()
+                                   game_state, clock, rule, calc_next)
+
+                if event.type == pygame.MOUSEBUTTONDOWN:
                     for line in cell_list:
                         for cell in line:
-                            if cell.rect.collidepoint(mouse_pos):
-                                cell.toggle()
+                            if cell.rect.collidepoint(pygame.mouse.get_pos()):
+                                changing_to = cell.toggle()
+                                changing = True
+
                     update_all(screen, x, y, scale, fps, cell_list,
-                               game_state, clock, calc_next, rule)
-    
+                               game_state, clock, rule, calc_next)
+
+                if event.type == pygame.MOUSEBUTTONUP:
+                    changing = False
+                                         
+                if event.type == pygame.MOUSEMOTION:
+                    if changing:
+                        for line in cell_list:
+                            for cell in line:
+                                if (cell.rect.collidepoint(pygame.mouse.get_pos()) and
+                                    cell.state != changing_to):
+                                    cell.toggle()
+                                                        
+                    update_all(screen, x, y, scale, fps, cell_list,
+                               game_state, clock, rule, calc_next)
+                
         elif game_state == GameState.RUNNING:
             calc_next = True
             for event in pygame.event.get():
@@ -148,10 +173,10 @@ def engine(x, y, scale, fps, rule="life"):
                         sys.exit()
                     if event.key == pygame.K_SPACE or event.key == pygame.K_n:
                         game_state = GameState.SETUP
+                        calc_next = False
                     
             update_all(screen, x, y, scale, fps, cell_list,
-                       game_state, clock, calc_next, rule)
-            calc_next = False
+                       game_state, clock, rule, calc_next)
 
 if __name__ == '__main__':
     try:
@@ -187,11 +212,14 @@ if __name__ == '__main__':
                 print("Life Without Death (B3/S012345678) - inkspot")
                 print("Replicator (B1357/S1357) - replicator")
                 print("\nControls:")
-                print("Toggle cells on and off with the mouse.")
-                print("Step through generations with N.")
-                print("Clear board with C.")
-                print("Let simulation run with Space.")
-                print("Quit with Q.")
+                print("When simulation is stopped: toggle cells on and")
+                print("off with the mouse (click and drag to")
+                print("paint or erase.")
+                print("\nStep through generations with N (press and hold")
+                print("to run simulation.")
+                print("\nClear board with C.")
+                print("\nStart and stop simulation run with Space.")
+                print("\nQuit with Q.")
             else:
                 raise ValueError
         else:

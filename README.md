@@ -5,11 +5,12 @@ Dependencies: pygame
 
 Usage:
 
-* python life_engine.pyw
-* python life_engine.pyw [x] [y]
-* python life_engine.pyw [x] [y] [size of cells]
-* python life_engine.pyw [x] [y] [size of cells] [fps]
-* python life_engine.pyw [x] [y] [size of cells] [fps] [rule]
+* python3 life_engine.pyw help
+* python3 life_engine.pyw
+* python3 life_engine.pyw [x] [y]
+* python3 life_engine.pyw [x] [y] [size of cells]
+* python3 life_engine.pyw [x] [y] [size of cells] [fps]
+* python3 life_engine.pyw [x] [y] [size of cells] [fps] [rule]
 
 Defaults: 
 * x = 25
@@ -18,7 +19,7 @@ Defaults:
 * fps = 15
 * rule = life
 
-Options for rules (rule specification) - code for CL args:
+Options for rules (rule specification) - code:
 * Life (B3/S23) - life
 * HighLife (B36/S23) - highlife
 * Morley (B368/S245) - morley
@@ -28,8 +29,7 @@ Options for rules (rule specification) - code for CL args:
 * Replicator (B1357/S1357) - replicator
               
 Controls:
-* Toggle cells on and off with the mouse.
-* Step through generations with N.
-* Clear board with C.
+* When simulation is stopped: Toggle cells on and off with the mouse (click and drag to paint and erase). Clear board with C.
+* Step through generations with N (press and hold to run simulation)
 * Let simulation run with Space.
 * Quit with Q.

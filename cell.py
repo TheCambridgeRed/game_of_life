@@ -226,3 +226,5 @@ class Cell:
             self.state = State.DEAD
         else:
             self.state = State.ALIVE
+
+        return self.state

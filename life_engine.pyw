@@ -19,29 +19,29 @@ class GameState(Enum):
     SETUP = 1
     RUNNING = 2
 
-    
+
 def update_neighbours(cells_list, max_x, max_y):
     for line in cells_list:
         for cell in line:
             cell.count_live_neighbours(cells_list, max_x, max_y)
 
-            
+
 def update_living(cells_list, rule):
     for line in cells_list:
         for cell in line:
             cell.am_i_alive(rule)
 
-            
-def calc_next_round(cells_list, max_x, max_y, rule): 
+
+def calc_next_round(cells_list, max_x, max_y, rule):
     update_neighbours(cells_list, max_x, max_y)
     update_living(cells_list, rule)
-            
+
 
 def generate_cells_list(x, y, scale_factor):
     main_list = []
 
     j = 0
-    
+
     while j < x:
         i = 0
         inner_list = []
@@ -70,7 +70,7 @@ def draw_grid(x, y, scale, screen):
     for i in range(1, y):
         pygame.draw.line(screen, grid_colour, (0, i * scale), (x * scale - 1, i * scale))
 
-        
+
 def clear_board(cell_list):
     for line in cell_list:
         for cell in line:
@@ -81,22 +81,22 @@ def update_all(screen, x, y, scale, fps, cell_list,
                game_state, clock, rule, calc_next):
     if calc_next:
         calc_next_round(cell_list, x, y, rule)
-        
+
     draw_cells(cell_list, screen)
     draw_grid(x, y, scale, screen)
-    
+
     if game_state == GameState.RUNNING:
         clock.tick(fps)
-        
+
     pygame.display.update()
 
-            
+
 def engine(x, y, scale, fps, rule="life"):
     print(f'x = {x}\ny = {y}\ncell size = {scale}\nfps = {fps}\nrule = {rule}')
 
     # setup
     pygame.init()
-    
+
     size = width, height = x * scale, y * scale
     screen = pygame.display.set_mode(size)
     pygame.display.set_caption('Game of Life')
@@ -109,9 +109,9 @@ def engine(x, y, scale, fps, rule="life"):
 
     key_delay = int(1000/fps)
     pygame.key.set_repeat(key_delay)
-    
+
     cell_list = generate_cells_list(x, y, scale)
-    
+
     game_state = GameState.SETUP
     calc_next = False
     changing = False
@@ -119,7 +119,7 @@ def engine(x, y, scale, fps, rule="life"):
 
     update_all(screen, x, y, scale, fps, cell_list,
                game_state, clock, rule, calc_next)
-    
+
     # game loop
     while True:
         if game_state == GameState.SETUP:
@@ -151,7 +151,7 @@ def engine(x, y, scale, fps, rule="life"):
 
                 if event.type == pygame.MOUSEBUTTONUP:
                     changing = False
-                                         
+
                 if event.type == pygame.MOUSEMOTION:
                     if changing:
                         for line in cell_list:
@@ -159,10 +159,10 @@ def engine(x, y, scale, fps, rule="life"):
                                 if (cell.rect.collidepoint(pygame.mouse.get_pos()) and
                                     cell.state != changing_to):
                                     cell.toggle()
-                                                        
+
                     update_all(screen, x, y, scale, fps, cell_list,
                                game_state, clock, rule, calc_next)
-                
+
         elif game_state == GameState.RUNNING:
             calc_next = True
             for event in pygame.event.get():
@@ -174,7 +174,7 @@ def engine(x, y, scale, fps, rule="life"):
                     if event.key == pygame.K_SPACE or event.key == pygame.K_n:
                         game_state = GameState.SETUP
                         calc_next = False
-                    
+
             update_all(screen, x, y, scale, fps, cell_list,
                        game_state, clock, rule, calc_next)
 
@@ -240,5 +240,3 @@ if __name__ == '__main__':
         print("Day & Night (B3678/S34678) - daynight")
         print("Life Without Death (B3/S012345678) - inkspot")
         print("Replicator (B1357/S1357) - replicator")
-            
-            

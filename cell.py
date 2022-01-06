@@ -15,11 +15,11 @@ class Cell:
         self.rect = pygame.Rect(self.x * self.scale, self.y * self.scale, self.scale, self.scale)
         self.live_neighbours = 0
 
-        
+
     def __repr__(self):
         return f'Cell [{self.x}],[{self.y}]'
 
-        
+
     def count_live_neighbours(self, cells_list, max_x, max_y):
         self.live_neighbours = 0
 
@@ -103,7 +103,7 @@ class Cell:
                 self.live_neighbours+= 1
             if cells_list[self.x + 1][self.y + 1].state == State.ALIVE:
                 self.live_neighbours+= 1
-                
+
         else:                                                # middle cells
             if cells_list[self.x][self.y + 1].state == State.ALIVE:
                 self.live_neighbours+= 1
@@ -121,10 +121,10 @@ class Cell:
                 self.live_neighbours+= 1
             if cells_list[self.x - 1][self.y + 1].state == State.ALIVE:
                 self.live_neighbours+= 1
-        
+
 
         # this is the simple but really slow way
-        
+
         # for line in cells_list:
         #     for cell in line:
         #         if cell.x == self.x - 1:
@@ -155,7 +155,7 @@ class Cell:
         #                 if cell.state == State.ALIVE:
         #                     self.live_neighbours+= 1
 
-        
+
     def am_i_alive(self, rule="life"):
         if rule == "life":
             if self.state == State.ALIVE:
@@ -164,7 +164,7 @@ class Cell:
             elif self.state == State.DEAD:
                 if self.live_neighbours == 3:
                     self.toggle()
-                    
+
         elif rule == "highlife":
             if self.state == State.ALIVE:
                 if self.live_neighbours != 2 and self.live_neighbours != 3:
@@ -202,14 +202,14 @@ class Cell:
                 if (self.live_neighbours == 3 or self.live_neighbours == 6 or
                     self.live_neighbours == 7 or self.live_neighbours == 8):
                     self.toggle()
-                    
+
         elif rule == "inkspot":
             if self.state == State.DEAD:
                 if self.live_neighbours == 3:
                     self.toggle()
             elif self.state == State.ALIVE:
                 pass
-                    
+
         elif rule == "replicator":
             if self.state == State.ALIVE:
                 if (self.live_neighbours != 1 and self.live_neighbours != 3 and
@@ -220,7 +220,7 @@ class Cell:
                     self.live_neighbours == 5 or self.live_neighbours == 7):
                     self.toggle()
 
-                    
+
     def toggle(self):
         if self.state == State.ALIVE:
             self.state = State.DEAD
